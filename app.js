@@ -1,17 +1,4 @@
-/* ================
-   Password Generator Script
-   Implements:
-   - Generate password
-   - Copy to clipboard + auto-copy option
-   - Strength indicator
-   - 3D tilt effect on card by pointer movement
-   - Password history (last 5) without "Use" button
-   - Export history to .txt
-   ================ */
 
-/* -------------------------
-   Utility / config
-   ------------------------- */
 const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const LOWER = "abcdefghijklmnopqrstuvwxyz";
 const NUMS = "0123456789";
@@ -30,8 +17,6 @@ const uppercaseChk = document.getElementById("uppercase");
 const lowercaseChk = document.getElementById("lowercase");
 const numbersChk = document.getElementById("numbers");
 const symbolsChk = document.getElementById("symbols");
-const avoidAmbiguous = document.getElementById("avoidAmbiguous");
-const autoCopy = document.getElementById("autoCopy");
 
 const strengthFill = document.getElementById("strengthFill");
 const strengthText = document.getElementById("strengthText");
@@ -41,6 +26,7 @@ const exportBtn = document.getElementById("exportBtn");
 const clearHistoryBtn = document.getElementById("clearHistory");
 
 const card = document.getElementById("card");
+const themeCheckbox = document.getElementById("themeCheckbox");
 
 /* -------------------------
    App state
@@ -57,10 +43,6 @@ function buildCharset(){
   if(lowercaseChk.checked) charset += LOWER;
   if(numbersChk.checked) charset += NUMS;
   if(symbolsChk.checked) charset += SYMBOLS;
-  if(avoidAmbiguous.checked){
-    const re = new RegExp("[" + AMBIGUOUS.split("").map(c=>"\\"+c).join("") + "]","g");
-    charset = charset.replace(re,"");
-  }
   return charset;
 }
 
@@ -84,11 +66,6 @@ function generatePassword(length){
   for(let i=0;i<requiredCount;i++){
     let set = selectedSets[i % selectedSets.length];
     let ch = set[randomInt(set.length)];
-    if(avoidAmbiguous.checked && AMBIGUOUS.includes(ch)){
-      while(AMBIGUOUS.includes(ch)){
-        ch = set[randomInt(set.length)];
-      }
-    }
     pw += ch;
   }
   // fill remaining
@@ -101,18 +78,24 @@ function generatePassword(length){
   return pw;
 }
 
-/* Password strength estimation */
+/* Password strength estimation (simple but practical)
+   - Points for length, types included
+   - Returns score 0..100 and a label
+*/
 function evaluateStrength(pw){
   if(!pw) return {score:0,label:"—"};
   let score = 0;
+  // length points
   const len = pw.length;
-  score += Math.min(40, (len - 6) * 3.33); // up to 40 points
+  score += Math.min(40, (len - 6) * 3.33); // up to 40 points for length 6->18+
+  // variety
   const hasLower = /[a-z]/.test(pw);
   const hasUpper = /[A-Z]/.test(pw);
   const hasNum = /[0-9]/.test(pw);
   const hasSym = /[^A-Za-z0-9]/.test(pw);
   const types = [hasLower, hasUpper, hasNum, hasSym].filter(Boolean).length;
   score += types * 15; // up to 60
+  // penalty for repeated sequences or common patterns (simple)
   if(/(.)\1{2,}/.test(pw)) score -= 10;
   if(/^(?:password|1234|qwerty|admin)/i.test(pw)) score = 5;
   score = Math.max(0, Math.min(100, Math.round(score)));
@@ -129,6 +112,7 @@ function updateStrengthUI(pw){
   const s = evaluateStrength(pw);
   strengthFill.style.width = s.score + "%";
   strengthText.textContent = `Strength: ${s.label} (${s.score}%)`;
+  // set color classes
   strengthFill.className = "strength-fill";
   if(s.score >= 80) strengthFill.classList.add("strength-strong");
   else if(s.score >= 60) strengthFill.classList.add("strength-medium");
@@ -143,36 +127,31 @@ function pushHistory(pw){
   if(history.length > MAX_HISTORY) history.pop();
   renderHistory();
 }
-
 function renderHistory(){
   regenerateHistoryList.innerHTML = "";
-  history.forEach((h) => {
+  history.forEach((h, idx) => {
     const li = document.createElement("li");
     const span = document.createElement("span");
     span.textContent = h.pw;
-
     const actions = document.createElement("div");
     actions.style.display = "flex";
     actions.style.gap = "6px";
-
     const copy = document.createElement("button");
     copy.className = "btn small";
     copy.textContent = "Copy";
-    copy.onclick = () => { 
-      navigator.clipboard.writeText(h.pw); 
-      flashMessage("Copied history item"); 
-    };
-
+    copy.onclick = () => { navigator.clipboard.writeText(h.pw); flashMessage("Copied history item"); };
     actions.appendChild(copy);
+
+
     li.appendChild(span);
     li.appendChild(actions);
-
     regenerateHistoryList.appendChild(li);
   });
 }
 
-/* flash message */
+/* flash message (tiny toast) */
 function flashMessage(msg){
+  // small ephemeral feedback via title attribute (quick)
   const prev = document.title;
   document.title = msg;
   setTimeout(()=>document.title = prev, 900);
@@ -187,9 +166,11 @@ function onGenerate(){
   passwordOutput.value = pw;
   updateStrengthUI(pw);
   pushHistory(pw);
-  if(autoCopy.checked && pw) {
-    navigator.clipboard.writeText(pw).then(()=> flashMessage("Auto-copied"));
-  }
+}
+
+function onRegenerate(){
+  
+  onGenerate();
 }
 
 function onCopy(){
@@ -235,18 +216,10 @@ clearHistoryBtn.addEventListener("click", () => {
   renderHistory();
 });
 
-themeCheckbox.addEventListener("change", (e) => {
-  applyTheme(e.target.checked);
-});
-/* set default from prefers-color-scheme */
-const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-themeCheckbox.checked = prefersLight;
-applyTheme(themeCheckbox.checked);
-
 /* 3D tilt effect */
 (function addTilt(){
   const root = card;
-  const damp = 16;
+  const damp = 16; // smaller = more tilt
   let rect = root.getBoundingClientRect();
 
   function updateRect(){ rect = root.getBoundingClientRect(); }
