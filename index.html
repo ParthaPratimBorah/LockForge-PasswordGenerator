@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LockForge-Password-generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1 class="title">LockForge</h1>
+    </header>
+
+    <section class="card-wrapper">
+      <!-- 3D card container -->
+      <div class="card" id="card" tabindex="0" aria-label="Password generator card">
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="password-display" id="passwordDisplay" aria-live="polite">
+              <input id="passwordOutput" readonly />
+              <button id="copyBtn" class="btn small" title="Copy to clipboard">Copy</button>
+            </div>
+            <div class="controls-row">
+              <label class="control">
+                <input type="checkbox" id="uppercase" checked />
+                Uppercase
+              </label>
+              <label class="control">
+                <input type="checkbox" id="lowercase" checked />
+                Lowercase
+              </label>
+              <label class="control">
+                <input type="checkbox" id="numbers" checked />
+                Numbers
+              </label>
+              <label class="control">
+                <input type="checkbox" id="symbols" checked />
+                Symbols
+              </label>
+            </div>
+          </div>
+
+          <div class="card-mid">
+            <div class="length-control">
+              <label for="lengthRange">Length <span id="lengthValue">12</span></label>
+              <input type="range" id="lengthRange" min="6" max="32" value="12" />
+            </div>
+
+            <div class="buttons-row">
+              <button id="generateBtn" class="btn primary">Generate</button>
+            </div>
+          </div>
+
+          <div class="card-bottom">
+            <div class="strength">
+              <div class="strength-bar" id="strengthBar" aria-hidden="true"><div class="strength-fill" id="strengthFill"></div></div>
+              <div class="strength-text" id="strengthText">Strength: —</div>
+            </div>
+
+            <div class="extras">
+              <label class="control small">
+                <input type="checkbox" id="avoidAmbiguous" />
+                Avoid ambiguous (0, O, l, 1)
+              </label>
+              <label class="control small">
+                <input type="checkbox" id="autoCopy" />
+                Auto-copy on generate
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="history-panel" aria-label="Generated password history">
+      <h2>History</h2>
+      <ul id="historyList" class="history-list" aria-live="polite"></ul>
+      <div class="history-actions">
+        <button id="exportBtn" class="btn small">Export (.txt)</button>
+        <button id="clearHistory" class="btn small ghost">Clear</button>
+      </div>
+    </aside>
+
+    <footer class="app-footer">
+      <small>STRONG, SMART, SECURE — Your Passwords, Upgraded in a Click!</small>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
