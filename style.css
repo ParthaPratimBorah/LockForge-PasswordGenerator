@@ -1,14 +1,14 @@
 :root{
-  --bg: #0A1931;            /* page background */
+  --bg: #0A1931;           
   --card-bg: linear-gradient(180deg,#1A3D63 0%, #0A1931 100%);
-  --accent: #4A7FA7;        /* primary accent */
-  --accent-2: #B3CFE5;      /* secondary accent */
-  --muted: #F6FAFD;         /* text color */
-  --surface: rgba(246,250,253,0.08); /* panels / controls */
-  --glass: rgba(246,250,253,0.1);    /* input backgrounds */
-  --success: #4A7FA7;       /* success tone */
-  --warning: #B3CFE5;       /* warning tone */
-  --danger: #E63946;        /* danger (added, since not in palette) */
+  --accent: #4A7FA7;        
+  --accent-2: #B3CFE5;      
+  --muted: #F6FAFD;         
+  --surface: rgba(246,250,253,0.08); 
+  --glass: rgba(246,250,253,0.1);    
+  --success: #4A7FA7;       
+  --warning: #B3CFE5;       
+  --danger: #E63946;        
   --shadow: 18px 24px 42px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.02);
   --radius: 16px;
   --max-width: 980px;
@@ -16,7 +16,7 @@
   --font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-/* Reset & base */
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -32,7 +32,7 @@ body{
   -moz-osx-font-smoothing:grayscale;
 }
 
-/* Main layout */
+
 .app{
   width:100%;
   max-width:var(--max-width);
@@ -42,7 +42,7 @@ body{
   align-items:start;
 }
 
-/* Header */
+
 .app-header{
   grid-column:1 / span 2;
   display:flex;
@@ -57,12 +57,12 @@ body{
   letter-spacing:0.6px;
 }
 
-/* Card wrapper for perspective */
+
 .card-wrapper{
   perspective:1200px;
 }
 
-/* 3D card */
+
 .card{
   background:var(--card-bg);
   border-radius:calc(var(--radius) + 6px);
@@ -116,7 +116,6 @@ body{
 }
 .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04)}
 
-/* Controls */
 .controls-row{
   display:flex;
   gap:12px;
@@ -134,7 +133,6 @@ body{
 }
 .control.small{font-size:12px;padding:6px 8px}
 
-/* Mid */
 .card-mid{
   margin-top:16px;
   display:flex;
@@ -146,12 +144,10 @@ body{
 .length-control{flex:1; min-width:220px}
 .length-control input[type=range]{width:100%; margin-top:8px}
 
-/* Buttons row */
 .buttons-row{display:flex; gap:10px; align-items:center;}
 
-/* Bottom */
 .card-bottom{
-  margin-top:16px;
+  margin-top:16px; 
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -163,7 +159,6 @@ body{
 .strength-fill{height:100%; width:0%; transition:width 260ms ease, background 260ms ease}
 .strength-text{font-size:13px; color:var(--muted)}
 
-/* History panel */
 .history-panel{
   background:var(--card-bg);
   border-radius:12px;
@@ -188,7 +183,7 @@ body{
 }
 .history-actions{display:flex; gap:8px; justify-content:flex-end}
 
-/* Theme switch (simple) */
+
 .theme-switch{
   width:44px;height:26px;border-radius:20px;background:rgba(255,255,255,0.06);display:inline-block;position:relative;cursor:pointer;
 }
@@ -197,10 +192,8 @@ body{
   width:18px;height:18px;border-radius:50%;background:white;position:absolute;left:4px;top:4px;transition:left .18s ease, transform .18s;
   transform:scale(.95);
 }
-#themeCheckbox:checked + .theme-switch{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
-#themeCheckbox:checked + .theme-switch::after{left:22px; transform:scale(1)}
 
-/* Small screen responsiveness */
+
 @media (max-width: 880px){
   .app{
     grid-template-columns: 1fr;
@@ -209,7 +202,7 @@ body{
   .card{order:1}
 }
 
-/* mobile tweaks */
+
 @media (max-width:480px){
   body{padding:14px}
   .card-inner{padding:16px}
@@ -217,14 +210,12 @@ body{
   .password-display input{font-size:15px;padding:10px}
 }
 
-/* interactive hover / press */
+
 .btn:active{transform:translateY(1px) scale(.997)}
 
-/* visual strength colors */
 .strength-very-weak {background:var(--danger)}
 .strength-weak {background:linear-gradient(90deg,var(--danger), var(--warning))}
 .strength-medium {background:linear-gradient(90deg,var(--warning), var(--accent))}
 .strength-strong {background:linear-gradient(90deg,var(--accent), var(--accent-2))}
 
-/* accessibility focus states */
 button:focus, input:focus{outline: 2px dashed rgba(124,92,255,0.18); outline-offset:3px}

@@ -149,17 +149,13 @@ function renderHistory(){
   });
 }
 
-/* flash message (tiny toast) */
 function flashMessage(msg){
-  // small ephemeral feedback via title attribute (quick)
   const prev = document.title;
   document.title = msg;
   setTimeout(()=>document.title = prev, 900);
 }
 
-/* -------------------------
-   Event handlers
-   ------------------------- */
+
 function onGenerate(){
   const length = Number(lengthRange.value);
   const pw = generatePassword(length);
